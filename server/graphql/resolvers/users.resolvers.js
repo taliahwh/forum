@@ -21,6 +21,7 @@ const userResolvers = {
       const usernameExists = User.findOne({ username });
 
       if (emailExists) throw new Error('Email already exists for a user');
+      if (usernameExists) throw new Error('Username already exists for a user');
 
       /**
        * Salt: adds random chars to data, to stop hackers who look for
