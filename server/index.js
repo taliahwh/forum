@@ -17,6 +17,7 @@ connectDB();
 const server = new ApolloServer({
   typeDefs,
   resolvers,
+  context: ({ req }) => ({ req }),
 });
 
 // Connect to MongoDB
