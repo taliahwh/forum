@@ -1,5 +1,6 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import { UserInputError } from 'apollo-server';
 
 import config from '../../config.js';
 
@@ -11,17 +12,27 @@ const userResolvers = {
   Mutation: {
     async register(
       _,
-      { registerInput: { username, email, password, confirmPassword } },
-      context,
-      info
+      { registerInput: { username, email, password, confirmPassword } }
     ) {
       // TODO: Validate user data
-      // TODO: Make sure user does not already exist
-      const emailExists = User.findOne({ email });
-      const usernameExists = User.findOne({ username });
 
-      if (emailExists) throw new Error('Email already exists for a user');
-      if (usernameExists) throw new Error('Username already exists for a user');
+      console.log(username, email);
+      const emailExists = await User.findOne({ email });
+      const usernameExists = await User.findOne({ username });
+
+      if (emailExists)
+        throw new UserInputError('Email is already in use', {
+          error: {
+            email: 'Email is already in use',
+          },
+        });
+
+      if (usernameExists)
+        throw new UserInputError('Username is already in use', {
+          error: {
+            username: 'Username is already in use',
+          },
+        });
 
       /**
        * Salt: adds random chars to data, to stop hackers who look for
@@ -31,6 +42,10 @@ const userResolvers = {
        * Hashing salting is essentially an additional step to keep passwords
        *  out of the hands of malicious hackers
        */
+
+      if (password != confirmPassword)
+        throw new Error('Passwords do not match');
+
       const salt = await bcrypt.genSalt(12);
       const hashedPassword = await bcrypt.hash(password, salt);
 
