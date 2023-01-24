@@ -18,7 +18,7 @@ const userResolvers = {
       // TODO: Validate user data
       // TODO: Make sure user does not already exist
       const emailExists = User.findOne({ email });
-      // const emailExists = User.findOne({ email });
+      const usernameExists = User.findOne({ username });
 
       /**
        * Salt: adds random chars to data, to stop hackers who look for
