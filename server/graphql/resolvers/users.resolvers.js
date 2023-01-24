@@ -5,43 +5,53 @@ import config from '../../config.js';
 
 import User from '../../models/userModel.js';
 
+const SECRET_KEY = process.env.SECRET_KEY;
+
 const userResolvers = {
   Mutation: {
     async register(
       _,
-      { registerInput: username, email, password, confirmPassword },
+      { registerInput: { username, email, password, confirmPassword } },
       context,
       info
     ) {
-      //  TODO: Validate user data
-      // TODO: Make sure user doesn't already exist
-      // TODO: Hash password and create auth token
+      // TODO: Validate user data
+      // TODO: Make sure user does not already exist
+      const emailExists = User.findOne({ email });
+      // const emailExists = User.findOne({ email });
 
-      const hashedPassword = await bcrypt.hash(password, 12).toString();
+      /**
+       * Salt: adds random chars to data, to stop hackers who look for
+       * consistent words and phrases in sensitive data in order to decode it.
+       * Hash: takes plaintext data and converts them into consistent ciphertext
+       *
+       * Hashing salting is essentially an additional step to keep passwords
+       *  out of the hands of malicious hackers
+       */
+      const salt = await bcrypt.genSalt(12);
+      const hashedPassword = await bcrypt.hash(password, salt);
 
-      const newUser = User.create({
+      const newUser = new User({
         username,
         password: hashedPassword,
         email,
       });
 
-      console.log(newUser);
+      const token = jwt.sign(
+        {
+          id: newUser._id,
+          username: newUser.username,
+          email: newUser.email,
+        },
+        'SECRET_KEY',
+        { expiresIn: '3h' }
+      );
 
-      // const token = jwt.sign(
-      //   {
-      //     id: newUser.id,
-      //     email: newUser.email,
-      //     username: newUser.username,
-      //   },
-      //   config.SECRET_KEY,
-      //   { expiresIn: '1hr' }
-      // );
-
-      // return {
-      //   ...newUser._doc,
-      //   id: newUser.id,
-      //   token,
-      // };
+      return {
+        ...newUser._doc,
+        id: newUser._id,
+        token,
+      };
     },
   },
 };
