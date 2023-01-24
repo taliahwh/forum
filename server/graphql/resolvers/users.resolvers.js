@@ -17,10 +17,10 @@ const userResolvers = {
     ) {
       // TODO: Validate user data
       // TODO: Make sure user does not already exist
-      // const emailExists = User.findOne({ email });
+      const emailExists = User.findOne({ email });
       const usernameExists = User.findOne({ username });
 
-      // if (emailExists) throw new Error('Email already exists for a user');
+      if (emailExists) throw new Error('Email already exists for a user');
       if (usernameExists) throw new Error('Username already exists for a user');
 
       /**
