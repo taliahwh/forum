@@ -20,6 +20,8 @@ const userResolvers = {
       const emailExists = User.findOne({ email });
       const usernameExists = User.findOne({ username });
 
+      if (emailExists) throw new Error('Email already exists for a user');
+
       /**
        * Salt: adds random chars to data, to stop hackers who look for
        * consistent words and phrases in sensitive data in order to decode it.
