@@ -18,8 +18,9 @@ const postResolvers = {
         const post = await Post.findById(postId);
         if (post) {
           return post;
+        } else {
+          throw new Error('Post not found');
         }
-        throw new Error('Post not found');
       } catch (error) {
         throw new Error(error);
       }
@@ -30,8 +31,6 @@ const postResolvers = {
     // can access the req.body within the context parameter
     async createPost(_, { body }, context) {
       const authorizedUser = checkAuth(context);
-      console.log(user);
-      console.log(body);
 
       const newPost = new Post({
         body,
