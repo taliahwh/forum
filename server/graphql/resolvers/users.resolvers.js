@@ -9,7 +9,6 @@ import {
   validateLoginInput,
 } from '../../util/validators.js';
 import User from '../../models/userModel.js';
-const SECRET_KEY = process.env.SECRET_KEY;
 
 const generateToken = (user) => {
   return jwt.sign(
@@ -18,8 +17,8 @@ const generateToken = (user) => {
       username: user.username,
       email: user.email,
     },
-    'SECRET_KEY',
-    { expiresIn: '3h' }
+    process.env.SECRET_KEY,
+    {}
   );
 };
 
