@@ -4,14 +4,14 @@ import jwt from 'jsonwebtoken';
 const checkAuth = (context) => {
   // conext = { ... headers }
   const authHeader = context.req.headers.authorization;
-  // console.log(context);
+
   if (authHeader) {
     const token = authHeader.split('Bearer ')[1];
 
     if (token) {
       try {
         const user = jwt.verify(token, process.env.SECRET_KEY);
-        console.log(user);
+
         return user;
       } catch (error) {
         console.log('Authentication error');
