@@ -39,7 +39,7 @@ const commentResolvers = {
       const { username } = checkAuth(context);
 
       try {
-        const post = await Post.findById(id);
+        const post = await Post.findById(postId);
         if (!post)
           throw new UserInputError(`Post not found with id: ${postId}`);
 
