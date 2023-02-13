@@ -15,7 +15,8 @@ const typeDefs = gql`
     id: ID!
     email: String!
     username: String!
-    token: String!
+    # token: String!
+    admin: Boolean!
     createdAt: String!
   }
 
@@ -39,13 +40,24 @@ const typeDefs = gql`
     email: String!
   }
 
+  input RegisterUserInput {
+    username: String!
+    email: String!
+    admin: Boolean!
+  }
+
   type Query {
     getPosts: [Post]
     getPost(postId: ID!): Post
+    admin: [User]
+    user(id: Int): User
+    getAllUsers: [User]
   }
 
   type Mutation {
     register(registerInput: RegisterInput): User!
+    registerUser(registerUserInput: RegisterUserInput): User!
+    assignAdmin(userId: Int): User!
     login(username: String!, password: String!): User!
     createPost(body: String!): Post!
     deletePost(postId: ID!): String!
