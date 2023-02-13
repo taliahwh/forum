@@ -23,5 +23,5 @@ const server = new ApolloServer({
 // Connect to MongoDB
 const PORT = process.env.PORT;
 server.listen({ port: PORT }).then((res) => {
-  console.log(`Server running on at ${res.url}`.green.bold);
+  console.log(`Server running on at ${res.url}`.blue.bold);
 });
