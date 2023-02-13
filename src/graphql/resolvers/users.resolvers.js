@@ -2,7 +2,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { UserInputError } from 'apollo-server';
 
-import config from '../../config.js';
+// import config from '../../config.js';
 
 import {
   validateRegisterInput,

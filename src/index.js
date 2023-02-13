@@ -10,7 +10,7 @@ import connectDB from './db.js';
 
 dotenv.config();
 
-connectDB();
+// connectDB();
 
 // app.use(bodyParser.urlencoded());
 
