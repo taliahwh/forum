@@ -31,6 +31,7 @@
     "mongoose": "^6.8.4"
   },
   "devDependencies": {
-    "nodemon": "^2.0.20"
+    "nodemon": "^2.0.20",
+    "prisma": "^4.10.1"
   }
 }
