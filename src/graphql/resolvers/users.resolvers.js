@@ -36,7 +36,8 @@ const userResolvers = {
       return users.filter((user) => user.admin);
     },
     user: (_, { id }) => {
-      return users.filter((user) => user.id === Number(id));
+      const user = users.filter((user) => user.id === Number(id));
+      return user[0];
     },
     getAllUsers: (_) => {
       return users;
@@ -44,13 +45,13 @@ const userResolvers = {
   },
 
   Mutation: {
-    registerUser: (_, { email, username }) => {
+    registerUser: (_, { registerUserInput: { email, username, admin } }) => {
       const newUser = {
         id: users.length + 1,
         email,
         username,
         createdAt: Date.now().toString(),
-        admin: false,
+        admin,
       };
       users.push(newUser);
       return users[users.length - 1];
