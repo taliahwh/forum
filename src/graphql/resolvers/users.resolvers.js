@@ -38,6 +38,7 @@ const userResolvers = {
     user: (_, { id }) => {
       const user = users.filter((user) => user.id === Number(id));
       return user[0];
+      // test
     },
     getAllUsers: (_) => {
       return users;
