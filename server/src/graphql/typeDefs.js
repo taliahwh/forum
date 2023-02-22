@@ -15,9 +15,13 @@ const typeDefs = gql`
     id: ID!
     email: String!
     username: String!
-    # token: String!
+    first_name: String!
+    last_name: String!
+    password: String!
+    date_of_birth: String!
     admin: Boolean!
     createdAt: String!
+    # token: String!
   }
 
   type Comment {
@@ -33,16 +37,14 @@ const typeDefs = gql`
     createdAt: String!
   }
 
-  input RegisterInput {
+  input RegisterUserInput {
+    email: String!
     username: String!
     password: String!
     confirmPassword: String!
-    email: String!
-  }
-
-  input RegisterUserInput {
-    username: String!
-    email: String!
+    first_name: String!
+    last_name: String!
+    date_of_birth: String!
     admin: Boolean!
   }
 
@@ -55,7 +57,6 @@ const typeDefs = gql`
   }
 
   type Mutation {
-    register(registerInput: RegisterInput): User!
     registerUser(registerUserInput: RegisterUserInput): User!
     assignAdmin(userId: Int): User!
     login(username: String!, password: String!): User!
