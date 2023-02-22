@@ -10,6 +10,7 @@ import {
   validateLoginInput,
 } from '../../util/validators.js';
 import User from '../../models/userModel.js';
+import prisma from '../../db/db.js';
 
 const generateToken = (user) => {
   return jwt.sign(
@@ -33,34 +34,66 @@ const userResolvers = {
 
   Query: {
     admin: (parent, args) => {
-      return users.filter((user) => user.admin);
+      // return users.filter((user) => user.admin);
+      return prisma.user.findMany({
+        where: { admin: true },
+      });
     },
     user: (_, { id }) => {
-      const user = users.filter((user) => user.id === Number(id));
-      return user[0];
-      // test
+      // const user = users.filter((user) => user.id === Number(id));
+      // return user[0];
+      return prisma.user.findFirst({
+        where: { id: Number(id) },
+      });
     },
     getAllUsers: (_) => {
-      return users;
+      return prisma.user.findMany();
     },
   },
 
   Mutation: {
-    registerUser: (_, { registerUserInput: { email, username, admin } }) => {
+    registerUser: (
+      _,
+      {
+        registerUserInput: {
+          email,
+          username,
+          first_name,
+          last_name,
+          password,
+          confirm_password,
+          date_of_birth,
+          admin,
+        },
+      }
+    ) => {
+      const date = new Date();
+      const dateTime = new Date(date);
       const newUser = {
-        id: users.length + 1,
+        // id: users.length + 1,
         email,
         username,
-        createdAt: Date.now().toString(),
+        first_name,
+        last_name,
+        password,
+        date_of_birth,
+        createdAt: dateTime,
         admin,
       };
-      users.push(newUser);
-      return users[users.length - 1];
+      // users.push(newUser);
+      // return users[users.length - 1];
+      return prisma.user.create({
+        data: newUser,
+      });
     },
     assignAdmin: (_, { id }) => {
-      const userToEnroll = users.find((user) => user.id === Number(id));
-      userToEnroll.admin = true;
-      return userToEnroll;
+      // const userToEnroll = users.find((user) => user.id === Number(id));
+      // userToEnroll.admin = true;
+      // return userToEnroll;
+      return prisma.user.update({
+        where: { id: Number(id) },
+        data: { admin: true },
+      });
     },
   },
   // Mutation: {
