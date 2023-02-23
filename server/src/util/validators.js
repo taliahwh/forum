@@ -1,8 +1,27 @@
-const validateRegisterInput = (username, email, password, confirmPassword) => {
+const validateRegisterInput = (
+  username,
+  email,
+  password,
+  confirm_password,
+  first_name,
+  last_name
+) => {
   const errors = {};
 
+  if (first_name.trim() === '') {
+    errors.first_name = 'First name must not be empty';
+  }
+
+  if (last_name.trim() === '') {
+    errors.last_name = 'Last name must not be empty';
+  }
+
   if (username.trim() === '') {
-    errors.username = 'Username must not be empty.';
+    errors.username = 'Username must not be empty';
+  }
+
+  if (username.trim().length < 3) {
+    errors.username = 'Username must be at least 3 characters';
   }
 
   if (email.trim() === '') {
@@ -18,8 +37,8 @@ const validateRegisterInput = (username, email, password, confirmPassword) => {
   //TODO: Password regEx validation
   if (password === '') {
     errors.password = 'Password must not be empty';
-  } else if (password !== confirmPassword) {
-    errors.confirmPassword = 'Passwords must match';
+  } else if (password !== confirm_password) {
+    errors.confirm_password = 'Passwords must match';
   }
 
   return {
