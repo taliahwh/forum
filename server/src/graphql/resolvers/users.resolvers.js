@@ -1,9 +1,6 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { UserInputError } from 'apollo-server';
-import users from '../../database.js';
-
-// import config from '../../config.js';
 
 import {
   validateRegisterInput,
@@ -52,7 +49,7 @@ const userResolvers = {
   },
 
   Mutation: {
-    registerUser: (
+    registerUser: async (
       _,
       {
         registerUserInput: {
@@ -63,36 +60,70 @@ const userResolvers = {
           password,
           confirm_password,
           date_of_birth,
-          admin,
         },
       }
     ) => {
-      const date = new Date();
-      const dateTime = new Date(date);
+      // Validate input to insure no fields are left empty
+      const { valid, errors } = validateRegisterInput(
+        username,
+        email,
+        password,
+        confirm_password,
+        first_name,
+        last_name
+      );
+      if (!valid) throw new UserInputError('Errors', { errors });
+
+      // Check if username or email already exists in db
+      const emailExists = await prisma.user.findFirst({ where: { email } });
+      const usernameExists = await prisma.user.findFirst({
+        where: { username },
+      });
+      console.log(emailExists);
+
+      if (emailExists)
+        throw new UserInputError('Email is already in use', {
+          error: {
+            email: 'Email is already in use',
+          },
+        });
+      if (usernameExists)
+        throw new UserInputError('Username is already in use', {
+          error: {
+            username: 'Username is already in use',
+          },
+        });
+
+      const capitalizedFirstName =
+        first_name.charAt(0).toUpperCase() + first_name.slice(1);
+      const capitalizedLastName =
+        last_name.charAt(0).toUpperCase() + last_name.slice(1);
       const newUser = {
         // id: users.length + 1,
         email,
         username,
-        first_name,
-        last_name,
+        first_name: capitalizedFirstName,
+        last_name: capitalizedLastName,
         password,
         date_of_birth,
-        createdAt: dateTime,
-        admin,
       };
-      // users.push(newUser);
-      // return users[users.length - 1];
       return prisma.user.create({
         data: newUser,
       });
     },
-    assignAdmin: (_, { id }) => {
+    assignAdmin: (_, { userId }) => {
       // const userToEnroll = users.find((user) => user.id === Number(id));
       // userToEnroll.admin = true;
       // return userToEnroll;
       return prisma.user.update({
-        where: { id: Number(id) },
+        where: { id: Number(userId) },
         data: { admin: true },
+      });
+    },
+    unassignAdmin: (_, { userId }) => {
+      return prisma.user.update({
+        where: { id: Number(userId) },
+        data: { admin: false },
       });
     },
   },
