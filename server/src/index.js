@@ -6,7 +6,6 @@ import { ApolloServer } from 'apollo-server';
 
 import typeDefs from './graphql/typeDefs.js';
 import resolvers from './graphql/resolvers/index.js';
-import connectDB from './db.js';
 
 dotenv.config();
 
