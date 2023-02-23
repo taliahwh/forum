@@ -41,7 +41,7 @@ const typeDefs = gql`
     email: String!
     username: String!
     password: String!
-    confirmPassword: String!
+    confirm_password: String!
     first_name: String!
     last_name: String!
     date_of_birth: String!
@@ -59,6 +59,7 @@ const typeDefs = gql`
   type Mutation {
     registerUser(registerUserInput: RegisterUserInput): User!
     assignAdmin(userId: Int): User!
+    unassignAdmin(userId: Int): User!
     login(username: String!, password: String!): User!
     createPost(body: String!): Post!
     deletePost(postId: ID!): String!
