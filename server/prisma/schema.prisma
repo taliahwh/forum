@@ -19,6 +19,6 @@ model User {
   password String
   date_of_birth String
   admin Boolean @default(false)
-  createdAt DateTime
+  createdAt DateTime @default(now())
 
 }
